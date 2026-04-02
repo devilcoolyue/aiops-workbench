@@ -1,0 +1,35 @@
+server:
+  port: ${SERVER_PORT:8089}
+
+spring:
+  application:
+    name: aiops-workbench
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://192.168.3.130:3306/aiops_workbench?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.staryea.aiops.model
+  configuration:
+    map-underscore-to-camel-case: true
+
+# CoPaw configuration
+copaw:
+  base-url: ${COPAW_BASE_URL:http://192.168.3.166:8088}
+  agent-id: ${COPAW_AGENT_ID:default}
+  default-channel: ${COPAW_DEFAULT_CHANNEL:console}
+
+browser-hub:
+  base-url: ${BROWSER_HUB_BASE_URL:http://192.168.3.166:8091}
+  persist-profile: ${BROWSER_HUB_PERSIST_PROFILE:true}
+  kiosk: ${BROWSER_HUB_KIOSK:true}
+
+logging:
+  level:
+    com.staryea.aiops: debug

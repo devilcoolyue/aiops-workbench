@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staryea.aiops.mapper.FocusEventMapper">
+
+    <resultMap id="BaseResultMap" type="com.staryea.aiops.model.FocusEvent">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="system_code" property="systemCode"/>
+        <result column="event_type" property="eventType"/>
+        <result column="event_count" property="eventCount"/>
+        <result column="ratio" property="ratio"/>
+        <result column="event_link" property="eventLink"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO focus_event (user_id, system_code, event_type, event_count, ratio, event_link)
+        VALUES (#{userId}, #{systemCode}, #{eventType}, #{eventCount}, #{ratio}, #{eventLink})
+    </insert>
+
+    <select id="getById" resultMap="BaseResultMap">
+        SELECT * FROM focus_event WHERE id = #{id}
+    </select>
+
+    <select id="listByUserId" resultMap="BaseResultMap">
+        SELECT * FROM focus_event WHERE user_id = #{userId} ORDER BY
+            CASE event_type
+                WHEN 'pending_upgrade' THEN 1
+                WHEN 'completed' THEN 2
+                WHEN 'not_started' THEN 3
+                WHEN 'to_be_determined' THEN 4
+                ELSE 5
+            END
+    </select>
+
+    <select id="listByUserIdAndSystemCode" resultMap="BaseResultMap">
+        SELECT * FROM focus_event WHERE user_id = #{userId} AND system_code = #{systemCode} ORDER BY
+            CASE event_type
+                WHEN 'pending_upgrade' THEN 1
+                WHEN 'completed' THEN 2
+                WHEN 'not_started' THEN 3
+                WHEN 'to_be_determined' THEN 4
+                ELSE 5
+            END
+    </select>
+
+    <update id="update">
+        UPDATE focus_event
+        <set>
+            <if test="systemCode != null">system_code = #{systemCode},</if>
+            <if test="eventType != null">event_type = #{eventType},</if>
+            <if test="eventCount != null">event_count = #{eventCount},</if>
+            <if test="ratio != null">ratio = #{ratio},</if>
+            <if test="eventLink != null">event_link = #{eventLink},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM focus_event WHERE id = #{id}
+    </delete>
+
+</mapper>
