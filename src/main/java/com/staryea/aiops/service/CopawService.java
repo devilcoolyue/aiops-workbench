@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -298,7 +299,7 @@ public class CopawService {
     public String createChat(String userId, String name, String agentId) {
         try {
             String resolvedAgentId = resolveAgentId(agentId);
-            String sessionId = copawConfig.getDefaultChannel() + ":" + (userId != null ? userId : "default");
+            String sessionId = copawConfig.getDefaultChannel() + ":" + UUID.randomUUID().toString();
             JSONObject body = new JSONObject();
             body.put("session_id", sessionId);
             body.put("user_id", userId != null ? userId : "default");
