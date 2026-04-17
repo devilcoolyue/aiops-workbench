@@ -1,7 +1,8 @@
 """AIOps Workbench MCP Server
 
-Wraps the workbench REST API (todo-tasks, focus-events) as MCP tools,
-so that CoPaw agent can query and manage operational data via tool calls.
+Wraps the workbench REST API (todo-tasks, todo-summaries, focus-events)
+as MCP tools, so that CoPaw agent can query and manage operational data
+via tool calls.
 
 Usage:
     python server.py                          # default http://localhost:8089
@@ -32,7 +33,7 @@ MCP_PORT = int(os.environ.get("MCP_PORT", "8090"))
 
 mcp = FastMCP(
     "aiops-workbench",
-    instructions="AIOps Workbench: todo tasks and focus events management",
+    instructions="AIOps Workbench: todo tasks, todo summaries, and focus events management",
     host=MCP_HOST,
     port=MCP_PORT,
 )
@@ -213,6 +214,47 @@ async def delete_todo_task(task_id: int) -> str:
         task_id: The task ID to delete.
     """
     result = await _request("DELETE", f"/todo-tasks/{task_id}")
+    return _format_result(result)
+
+
+# ---------------------------------------------------------------------------
+# Todo Summary tools
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+async def get_todo_summary(user_id: str = DEFAULT_USER_ID) -> str:
+    """Get the current todo summary for a user.
+
+    Use this when a concise LLM-generated summary of the user's todo list
+    is needed.
+
+    Args:
+        user_id: User identifier, defaults to "default".
+    """
+    result = await _request("GET", "/todo-summaries", params={"userId": user_id})
+    return _format_result(result)
+
+
+@mcp.tool()
+async def upsert_todo_summary(
+    summary_content: str,
+    user_id: str = DEFAULT_USER_ID,
+) -> str:
+    """Create or update the todo summary for a user.
+
+    If the user has no existing summary record, one will be created.
+    Otherwise, the stored summary content will be updated.
+
+    Args:
+        summary_content: LLM-generated todo summary text.
+        user_id: User identifier, defaults to "default".
+    """
+    body = {
+        "userId": user_id,
+        "summaryContent": summary_content,
+    }
+    result = await _request("POST", "/todo-summaries", json_body=body)
     return _format_result(result)
 
 

@@ -37,6 +37,15 @@ CREATE TABLE IF NOT EXISTS focus_event (
     KEY idx_focus_event_type (event_type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='重点关注事项';
 
+CREATE TABLE IF NOT EXISTS todo_summary (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id         VARCHAR(64) NOT NULL COMMENT '用户标识',
+    summary_content TEXT        NOT NULL COMMENT '待办任务总结内容',
+    created_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_todo_summary_user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='待办任务总结';
+
 -- =============================================
 -- 待办任务 mock 数据
 -- =============================================
@@ -44,6 +53,12 @@ INSERT INTO todo_task (user_id, system_code, task_name, task_level, task_detail,
 ('default', 'CRM', '前帐待办清单梳理', 'P1', '先核上一班未结事项，优先锁定阻断业务和临期限。', '/tasks/crm-clearing', '建议 先清故障,推荐 前帐清单', '预计10 分钟'),
 ('default', 'OSS', '巡检与隐患处理', 'P2', '回看升级单和遗留单，确认隐患处理是否还在挂账。', '/tasks/patrol-issues', '建议 先看升级单,推荐 异常跟踪项', '预计 8 分钟'),
 ('default', 'BILLING', '数据质量稽核确认', 'P3', '确认高影响系统是否需要专项排查。', '/tasks/data-audit', '建议 先看高影响系统,推荐 稽核确认结果', '预计 12 分钟');
+
+-- =============================================
+-- 待办总结 mock 数据
+-- =============================================
+INSERT INTO todo_summary (user_id, summary_content) VALUES
+('default', '当前共 3 项待办，优先处理 P1 类任务。建议先完成前帐待办清单梳理，再推进巡检与数据质量确认，并在处理完成后同步更新待办列表。');
 
 -- =============================================
 -- 重点关注事项 mock 数据

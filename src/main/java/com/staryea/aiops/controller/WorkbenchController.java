@@ -3,6 +3,7 @@ package com.staryea.aiops.controller;
 import com.staryea.aiops.model.FocusEvent;
 import com.staryea.aiops.model.Result;
 import com.staryea.aiops.model.TodoTask;
+import com.staryea.aiops.model.TodoSummary;
 import com.staryea.aiops.service.WorkbenchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,18 @@ public class WorkbenchController {
     public Result<Void> deleteTodoTask(@PathVariable Long id) {
         workbenchService.deleteTodoTask(id);
         return Result.success(null);
+    }
+
+    // ========== 待办总结 ==========
+
+    @GetMapping("/todo-summaries")
+    public Result<TodoSummary> getTodoSummary(@RequestParam(defaultValue = "default") String userId) {
+        return Result.success(workbenchService.getTodoSummary(userId));
+    }
+
+    @PostMapping("/todo-summaries")
+    public Result<TodoSummary> upsertTodoSummary(@RequestBody TodoSummary summary) {
+        return Result.success(workbenchService.upsertTodoSummary(summary));
     }
 
     // ========== 重点关注事项 ==========

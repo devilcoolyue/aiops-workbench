@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.staryea.aiops.mapper.TodoSummaryMapper">
+
+    <resultMap id="BaseResultMap" type="com.staryea.aiops.model.TodoSummary">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="summary_content" property="summaryContent"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="getByUserId" resultMap="BaseResultMap">
+        SELECT * FROM todo_summary WHERE user_id = #{userId}
+    </select>
+
+    <insert id="upsert">
+        INSERT INTO todo_summary (user_id, summary_content)
+        VALUES (#{userId}, #{summaryContent})
+        ON DUPLICATE KEY UPDATE
+            summary_content = #{summaryContent},
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+</mapper>

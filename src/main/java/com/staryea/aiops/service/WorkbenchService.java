@@ -2,8 +2,10 @@ package com.staryea.aiops.service;
 
 import com.staryea.aiops.mapper.FocusEventMapper;
 import com.staryea.aiops.mapper.TodoTaskMapper;
+import com.staryea.aiops.mapper.TodoSummaryMapper;
 import com.staryea.aiops.model.FocusEvent;
 import com.staryea.aiops.model.TodoTask;
+import com.staryea.aiops.model.TodoSummary;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,14 @@ public class WorkbenchService {
 
     private final TodoTaskMapper todoTaskMapper;
     private final FocusEventMapper focusEventMapper;
+    private final TodoSummaryMapper todoSummaryMapper;
 
-    public WorkbenchService(TodoTaskMapper todoTaskMapper, FocusEventMapper focusEventMapper) {
+    public WorkbenchService(TodoTaskMapper todoTaskMapper,
+                            FocusEventMapper focusEventMapper,
+                            TodoSummaryMapper todoSummaryMapper) {
         this.todoTaskMapper = todoTaskMapper;
         this.focusEventMapper = focusEventMapper;
+        this.todoSummaryMapper = todoSummaryMapper;
     }
 
     // ========== 待办任务 ==========
@@ -49,6 +55,17 @@ public class WorkbenchService {
 
     public void deleteTodoTask(Long id) {
         todoTaskMapper.deleteById(id);
+    }
+
+    // ========== 待办总结 ==========
+
+    public TodoSummary getTodoSummary(String userId) {
+        return todoSummaryMapper.getByUserId(userId);
+    }
+
+    public TodoSummary upsertTodoSummary(TodoSummary summary) {
+        todoSummaryMapper.upsert(summary);
+        return todoSummaryMapper.getByUserId(summary.getUserId());
     }
 
     // ========== 重点关注事项 ==========

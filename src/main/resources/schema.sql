@@ -23,6 +23,16 @@ CREATE TABLE IF NOT EXISTS todo_task (
     KEY idx_todo_system_code (system_code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='待办任务';
 
+-- Todo summaries (待办任务总结)
+CREATE TABLE IF NOT EXISTS todo_summary (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id         VARCHAR(64) NOT NULL COMMENT '用户标识',
+    summary_content TEXT        NOT NULL COMMENT '待办任务总结内容',
+    created_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_todo_summary_user_id (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='待办任务总结';
+
 -- Focus events (重点关注事项)
 CREATE TABLE IF NOT EXISTS focus_event (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
